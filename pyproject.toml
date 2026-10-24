@@ -27,3 +27,6 @@ ignore = ["E501"]
 [tool.setuptools.packages.find]
 where = ["backend"]
 include = ["app*"]
+
+[tool.fastapi]
+entrypoint = "main:app"
