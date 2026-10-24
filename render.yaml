@@ -1,0 +1,34 @@
+services:
+  - type: web
+    name: conduitguard-api
+    runtime: docker
+    plan: free
+    healthCheckPath: /api/health
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: CONDUITGUARD_ENV
+        value: production
+      - key: CORS_ALLOWED_ORIGINS
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: REDIS_URL
+        fromService:
+          type: keyvalue
+          name: conduitguard-rate-limit
+          property: connectionString
+      - key: RATE_LIMIT_ENABLED
+        value: "true"
+      - key: RATE_LIMIT_REQUESTS
+        value: "30"
+      - key: RATE_LIMIT_WINDOW_SECONDS
+        value: "60"
+      - key: TRUST_PROXY_HEADERS
+        value: "true"
+
+  - type: keyvalue
+    name: conduitguard-rate-limit
+    plan: free
+    maxmemoryPolicy: allkeys-lru
+    persistenceMode: off
+    ipAllowList: []

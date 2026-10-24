@@ -1,0 +1,7 @@
+{
+  "default_policy": "deny",
+  "rules": [
+    {"id": "allow-hmi-historian", "source": "10.70.20.0/24", "destination": "10.70.40.10", "protocol": "tcp", "port": 443, "action": "allow", "priority": 100, "description": "HMI access to historian service"},
+    {"id": "allow-engineering-controller", "source": "10.70.10.0/24", "destination": "10.70.30.20", "protocol": "udp", "port": 161, "action": "allow", "priority": 100, "description": "Engineering workstation monitoring path"}
+  ]
+}

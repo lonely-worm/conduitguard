@@ -1,0 +1,44 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.venv/
+.venv*/
+venv/
+*.egg-info/
+*.tsbuildinfo
+.vercel/
+
+# Node / Next.js
+node_modules/
+.next/
+frontend/node_modules/
+frontend/.next/
+out/
+artifacts/
+.playwright-browsers/
+pnpm-debug.log*
+frontend/next-env.d.ts.tmp
+npm-debug.log*
+
+# Environment and local state
+.env
+.env.*
+!.env.example
+.DS_Store
+Thumbs.db
+*.log
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.cer
+*.der
+*.dump
+*.bak
+*.sqlite
+*.sqlite3
+*.db
+artifacts/

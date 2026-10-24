@@ -1,0 +1,79 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.15"
+          cache: pip
+          cache-dependency-path: backend/requirements.txt
+      - run: python -m pip install -r backend/requirements.txt
+      - run: ruff check backend
+      - run: ruff format --check backend
+      - run: python -m pytest
+      - run: python -m pip install pip-audit && pip-audit -r backend/requirements.txt
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.25.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: pnpm
+          cache-dependency-path: frontend/pnpm-lock.yaml
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.15"
+      - run: python -m pip install -r ../backend/requirements.txt
+      - run: python -m pip install -r ../scripts/e2e-requirements.txt
+      - run: pnpm install --frozen-lockfile
+      - run: python -m playwright install --with-deps chromium
+      - run: pnpm lint
+      - run: pnpm exec tsc --noEmit
+      - run: pnpm build
+      - run: pnpm audit --audit-level=high
+      - name: End-to-end smoke
+        run: |
+          (cd .. && python -m uvicorn app.main:app --app-dir backend --host 127.0.0.1 --port 8000) &
+          api_pid=$!
+          pnpm start --hostname 127.0.0.1 --port 3000 &
+          web_pid=$!
+          trap 'kill "$api_pid" "$web_pid" 2>/dev/null || true' EXIT
+          python ../scripts/smoke.py
+          CONDUITGUARD_REPORT_DIR=../artifacts python ../scripts/browser_e2e.py
+      - name: Upload browser and accessibility reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: conduitguard-browser-accessibility-report
+          path: artifacts/accessibility-report.*
+          if-no-files-found: ignore
+
+  dependency-review:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: high
