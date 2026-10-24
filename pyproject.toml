@@ -15,3 +15,7 @@ src = ["backend"]
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP"]
 ignore = ["E501"]
+
+[tool.setuptools.packages.find]
+where = ["backend"]
+include = ["app*"]
