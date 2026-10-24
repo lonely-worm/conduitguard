@@ -1,4 +1,6 @@
 [project]
+name = "conduitguard"
+version = "0.1.0"
 requires-python = ">=3.15,<3.16"
 
 [tool.pytest.ini_options]
