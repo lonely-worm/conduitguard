@@ -43,6 +43,8 @@ export default function Workspace({ page }: { page: WorkspacePage }) {
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [historyStatus, setHistoryStatus] = useState<"idle" | "loading" | "available" | "unavailable">("idle");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [desktopMenuCollapsed, setDesktopMenuCollapsed] = useState(false);
+
   const pageDetails = PAGE_DETAILS[page];
 
   const inputState = useMemo(() => {
@@ -172,8 +174,8 @@ export default function Workspace({ page }: { page: WorkspacePage }) {
       <div className="sidebar-bottom"><div className="offline-card"><span className="green-dot"/><div><strong>Mode simulasi aktif</strong><small>Tidak ada koneksi perangkat jaringan</small></div></div><Link className="user-card" href="/profile" aria-label="Buka profil ruang kerja" onClick={() => setMobileMenuOpen(false)}><div className="avatar">CG</div><div><strong>Ruang kerja analisis</strong><small>Profil & preferensi</small></div><span className="dots" aria-hidden="true">···</span></Link></div>
     </aside>
 
-    <section className="main-panel" id="top">
-      <header className="topbar"><div className="crumb">Ruang kerja <span>/</span> <strong>{pageDetails.title}</strong></div><div className="top-right"><span className="env-tag"><i/> MODE SIMULASI</span><Link className="icon-button" href="/configuration" aria-label="Buka konfigurasi" title="Konfigurasi">⚙</Link><span className="team-logo-header"><Image src="/conduitguard-team-logo-cropped.png" alt="Logo tim" width={741} height={983} /></span><Link className="avatar small-avatar" href="/profile" aria-label="Buka profil">CG</Link></div></header>
+    <section className={`main-panel ${desktopMenuCollapsed ? "desktop-menu-collapsed" : ""}`} id="top">
+      <header className="topbar"><div className="topbar-leading"><button className="workspace-hamburger" type="button" aria-label={desktopMenuCollapsed ? "Buka sidebar navigasi" : "Tutup sidebar navigasi"} aria-expanded={!desktopMenuCollapsed} onClick={() => setDesktopMenuCollapsed((collapsed) => !collapsed)}><span/><span/><span/></button><div className="crumb">Ruang kerja <span>/</span> <strong>{pageDetails.title}</strong></div></div><div className="top-right"><span className="env-tag"><i/> MODE SIMULASI</span><Link className="icon-button" href="/configuration" aria-label="Buka konfigurasi" title="Konfigurasi">⚙</Link><span className="team-logo-header"><Image src="/conduitguard-team-logo-cropped.png" alt="Logo tim" width={741} height={983} /></span><Link className="avatar small-avatar" href="/profile" aria-label="Buka profil">CG</Link></div></header>
       <div className="content" id="main-content" tabIndex={-1}>
         <div className="page-heading"><div><div className="eyebrow"><span className="eyebrow-line"/> KONTROL PERUBAHAN</div><h1>{pageDetails.title}</h1><p>{pageDetails.description}</p></div>{page === "configuration" && <button className="secondary-button" type="button" onClick={loadExample} disabled={loading} aria-busy={loading}><RefreshIcon /> {loading ? "Memuat…" : "Muat contoh"}</button>}</div>
         <span className="sr-only" role="status" aria-live="polite">{loading ? "Memuat konfigurasi contoh." : ""}</span>
