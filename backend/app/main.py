@@ -16,7 +16,7 @@ from pydantic import ValidationError
 from redis.exceptions import RedisError
 
 from .analysis import RULES_VERSION, analyze
-from .database import database_url, list_analysis_history, save_analysis_summary
+from .database import database_url, get_analysis_history, list_analysis_history, save_analysis_summary
 from .models import AnalyzeRequest
 
 MAX_BODY_BYTES = 256 * 1024
@@ -351,16 +351,43 @@ def analyze_configuration(payload: AnalyzeRequest):
 
 
 @app.get("/api/history")
-def analysis_history(limit: int = 20):
+def analysis_history(page: int = 1, page_size: int = 10):
     if not database_url():
         return JSONResponse(
             status_code=503,
             content={"error": {"code": "database_not_configured", "message": "Analysis history is not configured."}},
         )
     try:
-        return {"items": list_analysis_history(limit=max(1, min(limit, 50)))}
-    except Exception as exc:
+        safe_page = max(1, page)
+        safe_page_size = max(1, min(page_size, 50))
+        return list_analysis_history(page=safe_page, page_size=safe_page_size)
+    except Exception:
         logger.exception("Analysis history could not be loaded")
+        return JSONResponse(
+            status_code=503,
+            content={
+                "error": {"code": "database_unavailable", "message": "Analysis history is temporarily unavailable."}
+            },
+        )
+
+
+@app.get("/api/history/{history_id}")
+def analysis_history_detail(history_id: int):
+    if not database_url():
+        return JSONResponse(
+            status_code=503,
+            content={"error": {"code": "database_not_configured", "message": "Analysis history is not configured."}},
+        )
+    try:
+        item = get_analysis_history(history_id)
+        if item is None:
+            return JSONResponse(
+                status_code=404,
+                content={"error": {"code": "history_not_found", "message": "Analysis history record was not found."}},
+            )
+        return item
+    except Exception:
+        logger.exception("Analysis history detail could not be loaded")
         return JSONResponse(
             status_code=503,
             content={
