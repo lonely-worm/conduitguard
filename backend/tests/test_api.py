@@ -166,11 +166,7 @@ def test_history_pagination_and_detail_endpoints(monkeypatch):
     monkeypatch.setattr(
         main,
         "get_analysis_history",
-        lambda history_id: (
-            {"id": history_id, "detail_json": {"findings": []}}
-            if history_id == 2
-            else None
-        ),
+        lambda history_id: {"id": history_id, "detail_json": {"findings": []}} if history_id == 2 else None,
     )
     assert request("GET", "/api/history/2").json()["detail_json"] == {"findings": []}
     missing = request("GET", "/api/history/999")
