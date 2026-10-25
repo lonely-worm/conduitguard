@@ -70,10 +70,14 @@ def _safe_detail(result: dict[str, Any]) -> dict[str, Any]:
             "added": [item["id"] for item in changes["added"]],
             "removed": [item["id"] for item in changes["removed"]],
             "changed": [
-                {"id": item["id"], "fields": sorted(
-                    key for key in set(item["before"]) | set(item["after"])
-                    if item["before"].get(key) != item["after"].get(key)
-                )}
+                {
+                    "id": item["id"],
+                    "fields": sorted(
+                        key
+                        for key in set(item["before"]) | set(item["after"])
+                        if item["before"].get(key) != item["after"].get(key)
+                    ),
+                }
                 for item in changes["changed"]
             ],
             "unchanged": changes["unchanged"],
@@ -151,8 +155,13 @@ def list_analysis_history(page: int = 1, page_size: int = 10) -> dict[str, Any]:
         )
         rows = cursor.fetchall()
         items = [{**row, "created_at": row["created_at"].isoformat()} for row in rows]
-        return {"items": items, "page": page, "page_size": page_size, "total": total,
-                "total_pages": max(1, (total + page_size - 1) // page_size)}
+        return {
+            "items": items,
+            "page": page,
+            "page_size": page_size,
+            "total": total,
+            "total_pages": max(1, (total + page_size - 1) // page_size),
+        }
 
 
 def get_analysis_history(history_id: int) -> dict[str, Any] | None:
