@@ -48,11 +48,10 @@ export default function HistoryDashboard() {
       if (!response.ok) throw new Error(body?.error?.message || `Riwayat gagal dimuat (HTTP ${response.status}).`);
       const parsed = body as HistoryPageData;
       setData(parsed); setPage(parsed.page);
-      if (selected !== null && !parsed.items.some((item) => item.id === selected)) { setSelected(null); setDetail(null); }
     } catch (e) {
       if (!(e instanceof DOMException && e.name === "AbortError")) setError(e instanceof Error ? e.message : "Riwayat tidak dapat dimuat.");
     } finally { setLoading(false); }
-  }, [selected]);
+  }, []);
 
   useEffect(() => {
     const controller = new AbortController();
