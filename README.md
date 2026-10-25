@@ -25,7 +25,7 @@ backend (FastAPI + Pydantic, :8000)
      └── app/main.py         API, request size enforcement, error handling
 ```
 
-The `POST /api/analyze` result includes changes, findings with evidence and mitigations, a deterministic heuristic risk summary, before/after probe decisions, recommendations, rules version, assumptions, and limitations. The browser adds a generation timestamp when downloading the report. Submitted configurations, probes, and finding evidence are not persisted. If `DATABASE_URL` is configured, PostgreSQL stores aggregate counts and the API exposes recent summaries through `GET /api/history` and the overview screen.
+The `POST /api/analyze` result includes changes, findings with evidence and mitigations, a deterministic heuristic risk summary, before/after probe decisions, recommendations, rules version, assumptions, and limitations. The browser adds a generation timestamp when downloading the report. Submitted configurations, probes, and finding evidence are not persisted. If `DATABASE_URL` is configured, PostgreSQL stores aggregate counts plus a redacted report detail (change IDs and changed field names, finding descriptions and mitigations, risk summary, and aggregate simulation decisions). The API exposes paginated summaries through `GET /api/history?page=1&page_size=10` and a single record through `GET /api/history/{id}`; the web interface is available at `/history`.
 
 ## Configuration schema
 
@@ -113,7 +113,7 @@ The approved hackathon architecture is Vercel for the Next.js frontend, a Render
 
 The Render API service requires an exact `CORS_ALLOWED_ORIGINS` value for the Vercel frontend, a secret Neon `DATABASE_URL`, and a Render Key Value `REDIS_URL`. Production enables a shared Redis-backed limit of 30 analysis or validation requests per client per 60 seconds. The limiter fails closed if Redis is unavailable, rather than falling back to an in-memory counter. See the runbook for the required internal-auth configuration on Render Key Value.
 
-PostgreSQL stores timestamp, counts, rules-engine version, and heuristic risk score only. The API creates `analysis_history` on first use. `GET /api/health` reports only whether a database is configured; it does not expose its URL. Without `DATABASE_URL`, analysis continues normally and history remains disabled.
+PostgreSQL stores timestamp, aggregate counts, rules-engine version, heuristic risk score, and redacted analysis details. Raw configurations, IP addresses, probe endpoints, and raw finding evidence are not persisted. Existing rows created before redacted details were added remain readable as summaries, but their detail cannot be reconstructed. The API creates or migrates the `analysis_history` table on first use. `GET /api/health` reports only whether a database is configured; it does not expose its URL. Without `DATABASE_URL`, analysis continues normally and history remains disabled.
 
 ## API
 
