@@ -982,3 +982,42 @@ button, .secondary-button, .primary-button, .nav-item { touch-action: manipulati
   .metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .config-grid { grid-template-columns: 1fr; }
 }
+
+
+/* Hamburger navigation is available on desktop, tablet, and mobile. */
+.workspace-hamburger {
+  display: inline-flex;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 5px;
+  border: 1px solid var(--soc-line, var(--line));
+  border-radius: 8px;
+  color: var(--soc-text, #eaf7f8);
+  background: var(--soc-850, #0b1c23);
+  cursor: pointer;
+  transition: border-color .18s ease, background .18s ease;
+}
+.workspace-hamburger:hover { border-color: var(--soc-cyan, #35d5d2); background: #10313a; }
+.workspace-hamburger span { display: block; width: 17px; height: 2px; border-radius: 2px; background: currentColor; }
+.workspace-hamburger:focus-visible { outline: 3px solid #48d5d2; outline-offset: 3px; }
+.topbar-leading { display: flex; align-items: center; min-width: 0; gap: 18px; }
+.topbar-leading .crumb { min-width: 0; }
+@media (min-width: 761px) {
+  .topbar { display: flex; align-items: center; gap: 18px; }
+  .sidebar { transition: transform .22s ease; }
+  .main-panel { transition: margin-left .22s ease; }
+  .main-panel.desktop-menu-collapsed { margin-left: 0 !important; }
+  .shell:has(.desktop-menu-collapsed) > .sidebar { transform: translateX(-105%); }
+  .workspace-hamburger { display: inline-flex; }
+}
+@media (max-width: 760px) {
+  .topbar-leading { display: none; }
+  .workspace-hamburger { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sidebar, .main-panel, .workspace-hamburger { transition: none; }
+}
