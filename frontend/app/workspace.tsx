@@ -42,6 +42,7 @@ export default function Workspace({ page }: { page: WorkspacePage }) {
   const [busy, setBusy] = useState(false);
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [historyStatus, setHistoryStatus] = useState<"idle" | "loading" | "available" | "unavailable">("idle");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pageDetails = PAGE_DETAILS[page];
 
   const inputState = useMemo(() => {
@@ -158,14 +159,17 @@ export default function Workspace({ page }: { page: WorkspacePage }) {
 
   return <main className="shell">
     <a className="skip-link" href="#main-content">Langsung ke konten utama</a>
-    <aside className="sidebar">
+    <aside className={`sidebar ${mobileMenuOpen ? "mobile-menu-open" : ""}`}>
+      <div className="mobile-nav-header">
       <Link className="brand" href="/" aria-label="ConduitGuard home"><span className="brand-mark"><Image src="/conduitguard-team-logo-cropped.png" alt="Logo tim ConduitGuard" width={741} height={983} priority /></span><span>conduit<span className="brand-light">guard</span><small>NETWORK CHANGE CONTROL</small></span></Link>
+      <div className="mobile-header-actions"><Link className="mobile-profile-link" href="/profile" aria-label="Buka profil" title="Profil"><span aria-hidden="true">CG</span></Link><button className="mobile-menu-toggle" type="button" aria-label={mobileMenuOpen ? "Tutup menu navigasi" : "Buka menu navigasi"} aria-expanded={mobileMenuOpen} aria-controls="workspace-navigation" onClick={() => setMobileMenuOpen((open) => !open)}><span/><span/><span/></button></div>
+      </div>
       <div className="nav-label">RUANG KERJA</div>
-      <nav aria-label="Navigasi utama">
-        {NAV_ITEMS.map((tab) => <Link key={tab} href={PAGE_DETAILS[tab].href} className={`nav-item ${page === tab ? "selected" : ""}`} aria-current={page === tab ? "page" : undefined}><NavIcon name={tab} /><span>{tab === "overview" ? "Ringkasan" : tab === "configuration" ? "Konfigurasi" : tab === "findings" ? "Temuan" : "Simulasi"}</span>{tab === "findings" && result && <b className="nav-count" aria-label={`${result.findings.length} temuan`}>{result.findings.length}</b>}</Link>)}
-        <Link href="/history" className="nav-item"><NavIcon name="history" /><span>Riwayat analisis</span></Link>
+      <nav id="workspace-navigation" aria-label="Navigasi utama">
+        {NAV_ITEMS.map((tab) => <Link key={tab} href={PAGE_DETAILS[tab].href} className={`nav-item ${page === tab ? "selected" : ""}`} onClick={() => setMobileMenuOpen(false)} aria-current={page === tab ? "page" : undefined}><NavIcon name={tab} /><span>{tab === "overview" ? "Ringkasan" : tab === "configuration" ? "Konfigurasi" : tab === "findings" ? "Temuan" : "Simulasi"}</span>{tab === "findings" && result && <b className="nav-count" aria-label={`${result.findings.length} temuan`}>{result.findings.length}</b>}</Link>)}
+        <Link href="/history" className="nav-item" onClick={() => setMobileMenuOpen(false)}><NavIcon name="history" /><span>Riwayat analisis</span></Link>
       </nav>
-      <div className="sidebar-bottom"><div className="offline-card"><span className="green-dot"/><div><strong>Mode simulasi aktif</strong><small>Tidak ada koneksi perangkat jaringan</small></div></div><Link className="user-card" href="/profile" aria-label="Buka profil ruang kerja"><div className="avatar">CG</div><div><strong>Ruang kerja analisis</strong><small>Profil & preferensi</small></div><span className="dots" aria-hidden="true">···</span></Link></div>
+      <div className="sidebar-bottom"><div className="offline-card"><span className="green-dot"/><div><strong>Mode simulasi aktif</strong><small>Tidak ada koneksi perangkat jaringan</small></div></div><Link className="user-card" href="/profile" aria-label="Buka profil ruang kerja" onClick={() => setMobileMenuOpen(false)}><div className="avatar">CG</div><div><strong>Ruang kerja analisis</strong><small>Profil & preferensi</small></div><span className="dots" aria-hidden="true">···</span></Link></div>
     </aside>
 
     <section className="main-panel" id="top">
