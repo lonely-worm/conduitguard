@@ -639,3 +639,73 @@ button, .secondary-button, .primary-button, .nav-item { touch-action: manipulati
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
+
+
+/* Mobile navigation: compact header, accessible drawer, and always-visible profile shortcut */
+.mobile-nav-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-width: 0; }
+.mobile-header-actions { display: none; align-items: center; gap: 9px; flex: 0 0 auto; }
+.mobile-menu-toggle { width: 42px; height: 42px; display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; border: 1px solid var(--soc-line, var(--line)); border-radius: 11px; color: var(--soc-text, var(--ink)); background: var(--soc-panel, var(--surface)); }
+.mobile-menu-toggle span { display: block; width: 18px; height: 2px; border-radius: 2px; background: currentColor; transition: transform .18s ease, opacity .18s ease; }
+.mobile-menu-toggle[aria-expanded="true"] span:first-child { transform: translateY(7px) rotate(45deg); }
+.mobile-menu-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+.mobile-menu-toggle[aria-expanded="true"] span:last-child { transform: translateY(-7px) rotate(-45deg); }
+.mobile-profile-link { display: inline-flex; width: 42px; height: 42px; align-items: center; justify-content: center; border: 1px solid var(--soc-line, var(--line)); border-radius: 50%; color: var(--soc-text, var(--ink)); background: var(--soc-panel, var(--surface)); text-decoration: none; font: 700 11px var(--mono); }
+.mobile-profile-link:focus-visible, .mobile-menu-toggle:focus-visible { outline: 3px solid #48d5d2; outline-offset: 3px; }
+
+@media (min-width: 761px) {
+  .mobile-nav-header { display: contents; }
+}
+
+@media (max-width: 760px) {
+  .sidebar {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    display: block;
+    width: 100%;
+    max-height: none;
+    height: auto;
+    padding: 10px 14px;
+    overflow: visible;
+    border-right: 0;
+    border-bottom: 1px solid var(--soc-line, var(--line));
+    box-shadow: 0 6px 22px rgba(0, 0, 0, .22);
+  }
+  .mobile-nav-header { display: flex; width: 100%; min-height: 44px; }
+  .mobile-header-actions { display: flex; }
+  .brand { min-width: 0; flex: 1 1 auto; gap: 9px; padding: 0; font-size: 17px; letter-spacing: -.5px; }
+  .brand > span:last-child { min-width: 0; }
+  .brand small { font-size: 7px; letter-spacing: .75px; white-space: nowrap; }
+  .brand-mark { width: 32px; height: 32px; flex: 0 0 32px; }
+  .brand-mark img, .brand-mark svg { width: 30px; height: 30px; object-fit: contain; }
+  .sidebar .nav-label { display: none; }
+  .sidebar nav { display: none; margin: 10px 0 2px; padding: 6px 0 2px; border-top: 1px solid var(--soc-line, var(--line)); }
+  .sidebar.mobile-menu-open nav { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; }
+  .sidebar nav .nav-item { display: flex; width: 100%; min-width: 0; min-height: 44px; gap: 9px; padding: 8px 10px; white-space: normal; overflow-wrap: anywhere; font-size: 12px; }
+  .sidebar nav .nav-item svg { width: 17px; height: 17px; flex: 0 0 17px; }
+  .sidebar-bottom { display: none; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--soc-line, var(--line)); }
+  .sidebar.mobile-menu-open .sidebar-bottom { display: block; }
+  .sidebar-bottom .offline-card { padding: 10px; }
+  .sidebar-bottom .user-card { display: flex; margin-top: 9px; padding: 10px 4px 2px; }
+  .main-panel { margin-left: 0; width: 100%; min-width: 0; }
+  .topbar { z-index: 5; min-height: 48px; padding: 8px 14px; gap: 8px; }
+  .topbar .crumb { max-width: 100%; font-size: 11px; }
+  .topbar .top-right { width: auto; margin-left: auto; flex-wrap: nowrap; gap: 7px; }
+  .topbar .env-tag { font-size: 8px; letter-spacing: .3px; }
+  .topbar .team-logo-header { display: none; }
+  .topbar .small-avatar { display: grid; }
+}
+
+@media (max-width: 420px) {
+  .sidebar { padding-inline: 10px; }
+  .brand { font-size: 15px; }
+  .brand small { font-size: 6.5px; letter-spacing: .55px; }
+  .mobile-header-actions { gap: 6px; }
+  .mobile-menu-toggle, .mobile-profile-link { width: 39px; height: 39px; }
+  .sidebar.mobile-menu-open nav { grid-template-columns: minmax(0, 1fr); }
+  .topbar .env-tag { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobile-menu-toggle span { transition: none; }
+}
