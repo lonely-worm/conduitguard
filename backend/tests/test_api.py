@@ -127,6 +127,32 @@ def test_history_has_explicit_unconfigured_and_database_error_states(monkeypatch
     assert unavailable_response.json()["error"]["code"] == "database_unavailable"
 
 
+def test_history_pagination_and_detail_endpoints(monkeypatch):
+    monkeypatch.setattr(main, "database_url", lambda: "postgresql://configured")
+    page_data = {
+        "items": [{"id": 2, "created_at": "2026-10-25T04:00:00+00:00", "rules_version": "1.1.0",
+                   "finding_count": 1, "high_severity_count": 1, "change_count": 1,
+                   "probe_count": 1, "risk_score": 20, "has_details": True}],
+        "page": 2, "page_size": 1, "total": 2, "total_pages": 2,
+    }
+    monkeypatch.setattr(main, "list_analysis_history", lambda page, page_size: {
+        **page_data, "page": page, "page_size": page_size,
+    })
+    response = request("GET", "/api/history?page=2&page_size=1")
+    assert response.status_code == 200
+    assert response.json()["page"] == 2
+    assert response.json()["total"] == 2
+    assert response.json()["items"][0]["id"] == 2
+
+    monkeypatch.setattr(main, "get_analysis_history", lambda history_id: {
+        "id": history_id, "detail_json": {"findings": []},
+    } if history_id == 2 else None)
+    assert request("GET", "/api/history/2").json()["detail_json"] == {"findings": []}
+    missing = request("GET", "/api/history/999")
+    assert missing.status_code == 404
+    assert missing.json()["error"]["code"] == "history_not_found"
+
+
 def test_analyze_remains_available_when_history_save_fails(monkeypatch):
     monkeypatch.setattr(main, "database_url", lambda: "postgresql://unavailable")
 
