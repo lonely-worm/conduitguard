@@ -54,9 +54,8 @@ export default function HistoryDashboard() {
   }, []);
 
   useEffect(() => {
-    const controller = new AbortController();
-    void loadPage(1, controller.signal);
-    return () => controller.abort();
+    const timer = window.setTimeout(() => void loadPage(1), 0);
+    return () => window.clearTimeout(timer);
   }, [loadPage]);
 
   const openDetail = async (id: number) => {
