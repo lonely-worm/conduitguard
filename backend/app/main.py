@@ -360,7 +360,7 @@ def analysis_history(limit: int = 20):
     try:
         return {"items": list_analysis_history(limit=max(1, min(limit, 50)))}
     except Exception as exc:
-        logger.error("Analysis history could not be loaded: %s", type(exc).__name__)
+        logger.exception("Analysis history could not be loaded")
         return JSONResponse(
             status_code=503,
             content={
