@@ -39,6 +39,7 @@ export default function HistoryDashboard() {
   const [detailLoading, setDetailLoading] = useState(false);
   const [error, setError] = useState("");
   const [detailError, setDetailError] = useState("");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const loadPage = useCallback(async (nextPage: number, signal?: AbortSignal) => {
     setLoading(true); setError("");
@@ -72,10 +73,13 @@ export default function HistoryDashboard() {
 
   return <main className="shell">
     <a className="skip-link" href="#history-content">Langsung ke riwayat</a>
-    <aside className="sidebar">
+    <aside className={`sidebar ${mobileMenuOpen ? "mobile-menu-open" : ""}`}>
+      <div className="mobile-nav-header">
       <Link className="brand" href="/"><span className="brand-mark">CG</span><span>conduit<span className="brand-light">guard</span><small>NETWORK CHANGE CONTROL</small></span></Link>
+      <div className="mobile-header-actions"><Link className="mobile-profile-link" href="/profile" aria-label="Buka profil" title="Profil"><span aria-hidden="true">CG</span></Link><button className="mobile-menu-toggle" type="button" aria-label={mobileMenuOpen ? "Tutup menu navigasi" : "Buka menu navigasi"} aria-expanded={mobileMenuOpen} aria-controls="history-navigation" onClick={() => setMobileMenuOpen((open) => !open)}><span/><span/><span/></button></div>
+      </div>
       <div className="nav-label">RUANG KERJA</div>
-      <nav aria-label="Navigasi utama">
+      <nav id="history-navigation" aria-label="Navigasi utama">
         <Link className="nav-item" href="/">Ringkasan</Link>
         <Link className="nav-item" href="/configuration">Konfigurasi</Link>
         <Link className="nav-item" href="/findings">Temuan</Link>
