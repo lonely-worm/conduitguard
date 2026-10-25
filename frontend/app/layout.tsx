@@ -6,8 +6,8 @@ export const metadata: Metadata = {
   description: "Validasi perubahan kebijakan firewall melalui simulasi offline dan temuan keamanan yang dapat dijelaskan.",
   applicationName: "ConduitGuard",
   icons: {
-    icon: "/conduitguard-team-logo-cropped.png",
-    apple: "/conduitguard-team-logo-cropped.png",
+    icon: "/conduitguard-mark.svg",
+    apple: "/conduitguard-mark.svg",
   },
 };
 
