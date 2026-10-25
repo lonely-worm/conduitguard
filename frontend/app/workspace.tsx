@@ -43,6 +43,7 @@ export default function Workspace({ page }: { page: WorkspacePage }) {
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [historyStatus, setHistoryStatus] = useState<"idle" | "loading" | "available" | "unavailable">("idle");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [desktopMenuCollapsed, setDesktopMenuCollapsed] = useState(false);
   const pageDetails = PAGE_DETAILS[page];
 
   const inputState = useMemo(() => {
