@@ -118,7 +118,7 @@ def test_history_has_explicit_unconfigured_and_database_error_states(monkeypatch
 
     monkeypatch.setattr(main, "database_url", lambda: "postgresql://unavailable")
 
-    def unavailable():
+    def unavailable(**_kwargs):
         raise RuntimeError("connection refused")
 
     monkeypatch.setattr(main, "list_analysis_history", unavailable)
