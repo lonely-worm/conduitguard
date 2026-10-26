@@ -163,7 +163,21 @@ export default function Workspace({ page }: { page: WorkspacePage }) {
     <a className="skip-link" href="#main-content">Langsung ke konten utama</a>
     <aside className={`sidebar ${mobileMenuOpen ? "mobile-menu-open" : ""}`}>
       <div className="mobile-nav-header">
-      <Link className="brand" href="/" aria-label="ConduitGuard home"><span className="brand-mark"><Image src="/conduitguard-team-logo-cropped.png" alt="Logo tim ConduitGuard" width={741} height={983} priority /></span><span>conduit<span className="brand-light">guard</span><small>NETWORK CHANGE CONTROL</small></span></Link>
+<Link className="brand" href="/" aria-label="ConduitGuard home">
+  <span className="brand-mark">
+    <img
+      src="https://i.imgur.com/E8ikoao.png"
+      alt="Logo tim ConduitGuard"
+      width={64}
+      height={64}
+      className="brand-image"
+    />
+  </span>
+  <span>
+    conduit<span className="brand-light">guard</span>
+    <small>NETWORK CHANGE CONTROL</small>
+  </span>
+</Link>
       <div className="mobile-header-actions"><Link className="mobile-profile-link" href="/profile" aria-label="Buka profil" title="Profil"><span aria-hidden="true">CG</span></Link><button className="mobile-menu-toggle" type="button" aria-label={mobileMenuOpen ? "Tutup menu navigasi" : "Buka menu navigasi"} aria-expanded={mobileMenuOpen} aria-controls="workspace-navigation" onClick={() => setMobileMenuOpen((open) => !open)}><span/><span/><span/></button></div>
       </div>
       <div className="nav-label">RUANG KERJA</div>
