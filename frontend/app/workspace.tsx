@@ -166,11 +166,13 @@ export default function Workspace({ page }: { page: WorkspacePage }) {
 <Link className="brand" href="/" aria-label="ConduitGuard home">
   <span className="brand-mark">
     <img
-      src="https://i.imgur.com/E8ikoao.png"
-      alt="Logo tim ConduitGuard"
-      width={64}
-      height={64}
-      className="brand-image"
+      <Image
+  src="/conduitguard-team-logo-cropped.png"
+  alt="Logo tim ConduitGuard"
+  width={64}
+  height={64}
+  priority
+/>
     />
   </span>
   <span>
